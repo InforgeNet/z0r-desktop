@@ -7,10 +7,11 @@ Imports System.Text.RegularExpressions
 
 Public Class main
 
-    Dim url_toshrink As String
+    Dim url_toshrink As String ' URL da shrinkare
+    Dim clipboard_string As String ' Stringa nella clipboard
 
     ' Effettua la GET al z0r.it ed ottiene il link shrinkato
-    Public Function shrinka(link As String) As String
+    Public Function shrink(link As String) As String
         Dim request As WebRequest
         request = _
        WebRequest.Create("http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&format=simply&url=" & link)
@@ -81,11 +82,16 @@ Public Class main
     ' Legge la pressione di eventuali hotkeys
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
         If m.Msg = WM_HOTKEY Then
-            url_toshrink = Clipboard.GetText ' prendo il link dalla clipboard
-            Clipboard.SetText(shrinka(url_toshrink)) ' e lo rimetto dentro shrinkato
-            My.Computer.Audio.Play("http://l33tspace.altervista.org/Ding.wav")
-            NotifyIcon1.ShowBalloonTip(1, "z0r", "Link shrinkato!", ToolTipIcon.Info)
-
+            url_toshrink = isurl(Clipboard.GetText) ' Viene effettuato il controllo sulla stringa nella clipboard
+            ' Se il link è diverso da 0 e quindi va bene
+            If url_toshrink <> "errore" Then
+                Clipboard.SetText(shrink(url_toshrink)) ' shrinka e mette il link nella clipboard
+                My.Computer.Audio.Play("http://l33tspace.altervista.org/Ding.wav") ' Ding
+                NotifyIcon1.ShowBalloonTip(1, "z0r", "Link shrinkato!", ToolTipIcon.Info) ' Notifica di successo
+                ' Se il link invece non va bene
+            Else
+                NotifyIcon1.ShowBalloonTip(1, "z0r", "Link non valido", ToolTipIcon.Error) ' Notifica di errore
+            End If
         End If
         MyBase.WndProc(m)
     End Sub
@@ -98,5 +104,22 @@ Public Class main
         UnregisterHotKey(Me.Handle, 100)
         UnregisterHotKey(Me.Handle, 200) ' attualmente inutilizzata
     End Sub
+
+    ' Regex
+    Dim url_regex As New Regex("(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*\.[-A-Za-z0-9\+&@#/%=~_|():?]+")
+
+    ' Controlla se la stringa è un url
+    Private Function isurl(link As String) As String
+        If url_regex.IsMatch(link) Then
+            Return link
+        Else
+            link = "http://" & link
+            If url_regex.IsMatch(link) Then
+                Return link
+            Else
+                Return "errore"
+            End If
+        End If
+    End Function
 
 End Class
