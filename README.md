@@ -12,5 +12,4 @@ Feel free to contribute!
 
 ## TODO:
 1. Add the ability to change the key shortcut for shrinking.
-2. Add a regex to check against non-link texts in clipboard.
-3. ...
+2. . ...
