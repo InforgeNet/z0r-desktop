@@ -6,12 +6,14 @@ Public Class personalizza
 
     Dim isactive As Boolean ' Utilizzata come semaforo
     Dim last_url As String = "none" ' Utilizzato come controllore per shrink ripetuti
+    Dim keyword As String ' Keyword personalizzata
 
     ' Effettua la GET al z0r.it ed ottiene il link shrinkato custom
     Public Function shrink_custom(link As String, custom_desc As String) As String
+        keyword = Replace(custom_desc, " ", "-") ' vengono rimossi eventuali spazi
         Dim request As WebRequest
         request = _
-       WebRequest.Create("http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&keyword=" & custom_desc & "&format=simply&url=" & link)
+       WebRequest.Create("http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&keyword=" & keyword & "&format=simply&url=" & link & "&title=upload_wth_z0r_desktp")
         request.Credentials = CredentialCache.DefaultCredentials
         Dim response As WebResponse = request.GetResponse()
         Console.WriteLine(CType(response, HttpWebResponse).StatusDescription)

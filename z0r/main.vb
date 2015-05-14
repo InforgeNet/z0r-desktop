@@ -14,7 +14,7 @@ Public Class main
     Public Function shrink(link As String) As String
         Dim request As WebRequest
         request = _
-       WebRequest.Create("http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&format=simply&url=" & link)
+       WebRequest.Create("http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&format=simply&url=" & link & "&title=upload_wth_z0r_desktp")
         request.Credentials = CredentialCache.DefaultCredentials
         Dim response As WebResponse = request.GetResponse()
         Console.WriteLine(CType(response, HttpWebResponse).StatusDescription)
@@ -76,8 +76,6 @@ Public Class main
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         RegisterHotKey(Me.Handle, 100, MOD_ALT, Keys.Z) ' Hotkey per shrinkare
-        RegisterHotKey(Me.Handle, 200, MOD_ALT, Keys.C) ' Hotkey per srhink custom
-        RegisterHotKey(Me.Handle, 300, MOD_ALT, Keys.E) ' Hotkey per espander link z0r
     End Sub
 
     ' Legge la pressione di eventuali hotkeys
@@ -102,8 +100,6 @@ Public Class main
                         ByVal e As System.Windows.Forms.FormClosingEventArgs) _
                         Handles MyBase.FormClosing
         UnregisterHotKey(Me.Handle, 100) ' Shrink
-        UnregisterHotKey(Me.Handle, 200) ' Custom shrink
-        UnregisterHotKey(Me.Handle, 300) ' Expand
         Application.Exit()
     End Sub
 
@@ -133,4 +129,5 @@ Public Class main
     Private Sub EstendiLinkToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EstendiLinkToolStripMenuItem.Click
         espandi.show()
     End Sub
+
 End Class

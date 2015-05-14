@@ -23,6 +23,7 @@ Partial Class personalizza
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(personalizza))
         Me.custom_desc = New System.Windows.Forms.TextBox()
         Me.shrink_button = New System.Windows.Forms.Label()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
@@ -32,6 +33,7 @@ Partial Class personalizza
         'custom_desc
         '
         Me.custom_desc.Location = New System.Drawing.Point(16, 16)
+        Me.custom_desc.MaxLength = 30
         Me.custom_desc.Name = "custom_desc"
         Me.custom_desc.Size = New System.Drawing.Size(316, 23)
         Me.custom_desc.TabIndex = 0
@@ -72,6 +74,8 @@ Partial Class personalizza
         Me.Controls.Add(Me.custom_desc)
         Me.Font = New System.Drawing.Font("Roboto", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.KeyPreview = True
         Me.Name = "personalizza"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Custom link"

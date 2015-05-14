@@ -23,6 +23,7 @@ Partial Class espandi
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(espandi))
         Me.expanded_link = New System.Windows.Forms.TextBox()
         Me.expand_button = New System.Windows.Forms.Label()
         Me.z0rurl_warning = New System.Windows.Forms.Label()
@@ -75,7 +76,10 @@ Partial Class espandi
         Me.Controls.Add(Me.expanded_link)
         Me.Font = New System.Drawing.Font("Roboto Cn", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.KeyPreview = True
         Me.Name = "espandi"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Espandi link"
         Me.ResumeLayout(False)
         Me.PerformLayout()
