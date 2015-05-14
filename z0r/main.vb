@@ -75,8 +75,9 @@ Public Class main
     ' ##########
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        RegisterHotKey(Me.Handle, 100, MOD_ALT, Keys.Z)
-        RegisterHotKey(Me.Handle, 200, MOD_ALT, Keys.S) ' per ora non utilizzata, ma non si sa mai
+        RegisterHotKey(Me.Handle, 100, MOD_ALT, Keys.Z) ' Hotkey per shrinkare
+        RegisterHotKey(Me.Handle, 200, MOD_ALT, Keys.C) ' Hotkey per srhink custom
+        RegisterHotKey(Me.Handle, 300, MOD_ALT, Keys.E) ' Hotkey per espander link z0r
     End Sub
 
     ' Legge la pressione di eventuali hotkeys
@@ -100,16 +101,17 @@ Public Class main
     Private Sub Form1_FormClosing(ByVal sender As System.Object, _
                         ByVal e As System.Windows.Forms.FormClosingEventArgs) _
                         Handles MyBase.FormClosing
-        NotifyIcon1.Visible = False
-        UnregisterHotKey(Me.Handle, 100)
-        UnregisterHotKey(Me.Handle, 200) ' attualmente inutilizzata
+        UnregisterHotKey(Me.Handle, 100) ' Shrink
+        UnregisterHotKey(Me.Handle, 200) ' Custom shrink
+        UnregisterHotKey(Me.Handle, 300) ' Expand
+        Application.Exit()
     End Sub
 
     ' Regex
     Dim url_regex As New Regex("(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*\.[-A-Za-z0-9\+&@#/%=~_|():?]+")
 
     ' Controlla se la stringa è un url
-    Private Function isurl(link As String) As String
+    Public Function isurl(link As String) As String
         If url_regex.IsMatch(link) Then
             Return link
         Else
@@ -122,4 +124,13 @@ Public Class main
         End If
     End Function
 
+    ' ########## tasti funzione menu tray icon
+
+    Private Sub PersonalizzaLinkToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PersonalizzaLinkToolStripMenuItem.Click
+        personalizza.Show()
+    End Sub
+
+    Private Sub EstendiLinkToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EstendiLinkToolStripMenuItem.Click
+        espandi.show()
+    End Sub
 End Class

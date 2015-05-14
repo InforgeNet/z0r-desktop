@@ -28,6 +28,9 @@ Partial Class main
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.InformazioniToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ChiudiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AvanzateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PersonalizzaLinkToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EstendiLinkToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -40,21 +43,40 @@ Partial Class main
         '
         'ContextMenuStrip1
         '
-        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.InformazioniToolStripMenuItem, Me.ChiudiToolStripMenuItem})
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AvanzateToolStripMenuItem, Me.InformazioniToolStripMenuItem, Me.ChiudiToolStripMenuItem})
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(142, 48)
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(153, 92)
         '
         'InformazioniToolStripMenuItem
         '
         Me.InformazioniToolStripMenuItem.Name = "InformazioniToolStripMenuItem"
-        Me.InformazioniToolStripMenuItem.Size = New System.Drawing.Size(141, 22)
+        Me.InformazioniToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.InformazioniToolStripMenuItem.Text = "Informazioni"
         '
         'ChiudiToolStripMenuItem
         '
         Me.ChiudiToolStripMenuItem.Name = "ChiudiToolStripMenuItem"
-        Me.ChiudiToolStripMenuItem.Size = New System.Drawing.Size(141, 22)
+        Me.ChiudiToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ChiudiToolStripMenuItem.Text = "Chiudi"
+        '
+        'AvanzateToolStripMenuItem
+        '
+        Me.AvanzateToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PersonalizzaLinkToolStripMenuItem, Me.EstendiLinkToolStripMenuItem})
+        Me.AvanzateToolStripMenuItem.Name = "AvanzateToolStripMenuItem"
+        Me.AvanzateToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.AvanzateToolStripMenuItem.Text = "Avanzate"
+        '
+        'PersonalizzaLinkToolStripMenuItem
+        '
+        Me.PersonalizzaLinkToolStripMenuItem.Name = "PersonalizzaLinkToolStripMenuItem"
+        Me.PersonalizzaLinkToolStripMenuItem.Size = New System.Drawing.Size(155, 22)
+        Me.PersonalizzaLinkToolStripMenuItem.Text = "Custom link"
+        '
+        'EstendiLinkToolStripMenuItem
+        '
+        Me.EstendiLinkToolStripMenuItem.Name = "EstendiLinkToolStripMenuItem"
+        Me.EstendiLinkToolStripMenuItem.Size = New System.Drawing.Size(155, 22)
+        Me.EstendiLinkToolStripMenuItem.Text = "Espandi z0r link"
         '
         'main
         '
@@ -73,5 +95,8 @@ Partial Class main
     Friend WithEvents ContextMenuStrip1 As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents InformazioniToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ChiudiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents AvanzateToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents PersonalizzaLinkToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents EstendiLinkToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

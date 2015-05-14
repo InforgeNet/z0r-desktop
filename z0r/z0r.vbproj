@@ -73,6 +73,12 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="espandi.Designer.vb">
+      <DependentUpon>espandi.vb</DependentUpon>
+    </Compile>
+    <Compile Include="espandi.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="main.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -101,8 +107,17 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="personalizza.Designer.vb">
+      <DependentUpon>personalizza.vb</DependentUpon>
+    </Compile>
+    <Compile Include="personalizza.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="espandi.resx">
+      <DependentUpon>espandi.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="main.resx">
       <DependentUpon>main.vb</DependentUpon>
     </EmbeddedResource>
@@ -114,6 +129,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="personalizza.resx">
+      <DependentUpon>personalizza.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
