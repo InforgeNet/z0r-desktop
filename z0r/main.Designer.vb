@@ -45,13 +45,13 @@ Partial Class main
         '
         Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AvanzateToolStripMenuItem, Me.InformazioniToolStripMenuItem, Me.ChiudiToolStripMenuItem})
         Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(142, 70)
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(143, 70)
         '
         'AvanzateToolStripMenuItem
         '
         Me.AvanzateToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PersonalizzaLinkToolStripMenuItem, Me.EstendiLinkToolStripMenuItem})
         Me.AvanzateToolStripMenuItem.Name = "AvanzateToolStripMenuItem"
-        Me.AvanzateToolStripMenuItem.Size = New System.Drawing.Size(141, 22)
+        Me.AvanzateToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
         Me.AvanzateToolStripMenuItem.Text = "Avanzate"
         '
         'PersonalizzaLinkToolStripMenuItem
@@ -59,7 +59,7 @@ Partial Class main
         Me.PersonalizzaLinkToolStripMenuItem.Name = "PersonalizzaLinkToolStripMenuItem"
         Me.PersonalizzaLinkToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.C), System.Windows.Forms.Keys)
         Me.PersonalizzaLinkToolStripMenuItem.ShowShortcutKeys = False
-        Me.PersonalizzaLinkToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.PersonalizzaLinkToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.PersonalizzaLinkToolStripMenuItem.Text = "Custom link"
         '
         'EstendiLinkToolStripMenuItem
@@ -67,19 +67,19 @@ Partial Class main
         Me.EstendiLinkToolStripMenuItem.Name = "EstendiLinkToolStripMenuItem"
         Me.EstendiLinkToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Alt Or System.Windows.Forms.Keys.E), System.Windows.Forms.Keys)
         Me.EstendiLinkToolStripMenuItem.ShowShortcutKeys = False
-        Me.EstendiLinkToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.EstendiLinkToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
         Me.EstendiLinkToolStripMenuItem.Text = "Espandi z0r link"
         '
         'InformazioniToolStripMenuItem
         '
         Me.InformazioniToolStripMenuItem.Name = "InformazioniToolStripMenuItem"
-        Me.InformazioniToolStripMenuItem.Size = New System.Drawing.Size(141, 22)
-        Me.InformazioniToolStripMenuItem.Text = "Informazioni"
+        Me.InformazioniToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
+        Me.InformazioniToolStripMenuItem.Text = "Impostazioni"
         '
         'ChiudiToolStripMenuItem
         '
         Me.ChiudiToolStripMenuItem.Name = "ChiudiToolStripMenuItem"
-        Me.ChiudiToolStripMenuItem.Size = New System.Drawing.Size(141, 22)
+        Me.ChiudiToolStripMenuItem.Size = New System.Drawing.Size(142, 22)
         Me.ChiudiToolStripMenuItem.Text = "Chiudi"
         '
         'main

@@ -10,6 +10,9 @@ Public Class main
     Dim url_toshrink As String ' URL da shrinkare
     Dim clipboard_string As String ' Stringa nella clipboard
 
+    Dim main_folder As String = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "/z0r" ' Cartella di z0r in AppData
+    Dim settings_file As String = main_folder & "/z0r_settings.ini" ' File che contiene le impostazioni
+
     ' Effettua la GET al z0r.it ed ottiene il link shrinkato
     Public Function shrink(link As String) As String
         Dim request As WebRequest
@@ -56,7 +59,7 @@ Public Class main
 
     ' Event che apre il box informazioni se cliccato il relativo bottone
     Private Sub InformazioniToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InformazioniToolStripMenuItem.Click
-        informazioni.Show()
+        impostazioni.Show()
     End Sub
 
     ' ######## Hotkeys
@@ -76,6 +79,7 @@ Public Class main
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         RegisterHotKey(Me.Handle, 100, MOD_ALT, Keys.Z) ' Hotkey per shrinkare
+        check_files() ' Controllo dei files
     End Sub
 
     ' Legge la pressione di eventuali hotkeys
@@ -128,6 +132,16 @@ Public Class main
 
     Private Sub EstendiLinkToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EstendiLinkToolStripMenuItem.Click
         espandi.show()
+    End Sub
+
+    ' Controlla che siano a posto i file necessari
+    Private Sub check_files()
+        If Directory.Exists(main_folder) = False Then
+            Directory.CreateDirectory(main_folder) ' Crea la directory per z0r
+        ElseIf File.Exists(settings_file) = False Then
+            ' C'è la directory ma per qualche motivo non il file settings
+            ' Non si fa niente per ora, ma può servire
+        End If
     End Sub
 
 End Class
