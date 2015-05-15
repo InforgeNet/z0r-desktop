@@ -24,6 +24,7 @@ Partial Class impostazioni
     Private Sub InitializeComponent()
         Me.runasAdmin = New System.Windows.Forms.CheckBox()
         Me.admin_warn = New System.Windows.Forms.Label()
+        Me.version = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'runasAdmin
@@ -46,12 +47,22 @@ Partial Class impostazioni
         Me.admin_warn.Text = "Avvia z0r come amministratore per abilitare la funzione"
         Me.admin_warn.Visible = False
         '
+        'version
+        '
+        Me.version.Location = New System.Drawing.Point(12, 247)
+        Me.version.Name = "version"
+        Me.version.Size = New System.Drawing.Size(303, 24)
+        Me.version.TabIndex = 2
+        Me.version.Text = "versione 0.1"
+        Me.version.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
         'impostazioni
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.SystemColors.Control
         Me.ClientSize = New System.Drawing.Size(327, 280)
+        Me.Controls.Add(Me.version)
         Me.Controls.Add(Me.admin_warn)
         Me.Controls.Add(Me.runasAdmin)
         Me.Font = New System.Drawing.Font("Roboto", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -59,7 +70,7 @@ Partial Class impostazioni
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "impostazioni"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "z0r Desktop [closed β]"
+        Me.Text = "z0r Desktop [β]"
         Me.TopMost = True
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -67,4 +78,5 @@ Partial Class impostazioni
     End Sub
     Friend WithEvents runasAdmin As System.Windows.Forms.CheckBox
     Friend WithEvents admin_warn As System.Windows.Forms.Label
+    Friend WithEvents version As System.Windows.Forms.Label
 End Class
