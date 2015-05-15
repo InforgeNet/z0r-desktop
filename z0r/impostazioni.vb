@@ -22,9 +22,13 @@ Public Class impostazioni
 
     ' Controlla se il programma è già presenta nella startup di windows
     Public Function isinStartup() As Boolean
-        If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).GetValue(Application.ProductName) <> Nothing Then
-            Return True
+        If My.User.IsInRole(ApplicationServices.BuiltInRole.Administrator) Then
+            If My.Computer.Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows\CurrentVersion\Run", True).GetValue(Application.ProductName) <> Nothing Then
+                Return True
+            End If
+            Return False
         End If
+        ' Se non si hanno i permessi admin non effettua il controllo o esplode tutto.
         Return False
     End Function
 
