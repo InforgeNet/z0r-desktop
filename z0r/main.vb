@@ -9,12 +9,14 @@ Public Class main
 
     Dim url_toshrink As String ' URL da shrinkare
     Dim clipboard_string As String ' Stringa nella clipboard
+    Dim last_shrinked As String
 
     Dim main_folder As String = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "/z0r" ' Cartella di z0r in AppData
     Dim settings_file As String = main_folder & "/z0r_settings.ini" ' File che contiene le impostazioni
 
     ' Effettua la GET al z0r.it ed ottiene il link shrinkato
     Public Function shrink(link As String) As String
+        NotifyIcon1.ShowBalloonTip(1, "z0r", "Shrinking...", ToolTipIcon.Info) ' Notifica di inizio shrink
         Dim request As WebRequest
         request = _
        WebRequest.Create("http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&format=simply&url=" & link & "&title=upload_wth_z0r_desktp")
@@ -87,13 +89,22 @@ Public Class main
         If m.Msg = WM_HOTKEY Then
             url_toshrink = isurl(Clipboard.GetText) ' Viene effettuato il controllo sulla stringa nella clipboard
             ' Se il link è diverso da 0 e quindi va bene
-            If url_toshrink <> "errore" Then
+            If url_toshrink <> "errore" And url_toshrink <> last_shrinked Then
                 Clipboard.SetText(shrink(url_toshrink)) ' shrinka e mette il link nella clipboard
-                My.Computer.Audio.Play("http://l33tspace.altervista.org/Ding.wav") ' Ding
-                NotifyIcon1.ShowBalloonTip(1, "z0r", "Link shrinkato!", ToolTipIcon.Info) ' Notifica di successo
+                last_shrinked = Clipboard.GetText ' Salva il link appena shrinkato per evitare doppi shrink
+                Try
+                    ' Prova a prelevare il file
+                    My.Computer.Audio.Play("http://l33tspace.altervista.org/Ding.wav") ' Ding
+                Catch ex As Exception
+                    ' Nel caso non ci riesce non fa il suono, sticazzi.. non si può far crashare tutto per un ding del cazzo.
+                End Try
+                NotifyIcon1.ShowBalloonTip(1, "z0r", "Link shrinkato e copiato nella clipboard!", ToolTipIcon.Info) ' Notifica di successo
                 ' Se il link invece non va bene
+            ElseIf url_toshrink = last_shrinked Then
+                ' Se nella clipboard c'è ancora l'ultimo link shrinkato avvisa l'utente
+                NotifyIcon1.ShowBalloonTip(1, "z0r", "Hai ancora nella clipboard l'ultimo link shrinkato: " & vbCrLf & last_shrinked, ToolTipIcon.Warning) ' Notifica di errore
             Else
-                NotifyIcon1.ShowBalloonTip(1, "z0r", "Link non valido", ToolTipIcon.Error) ' Notifica di errore
+                NotifyIcon1.ShowBalloonTip(1, "z0r", "URL non valido nella clipboard", ToolTipIcon.Error) ' Notifica di errore
             End If
         End If
         MyBase.WndProc(m)
