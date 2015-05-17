@@ -28,6 +28,7 @@ Public Class main
     Public expand_success As String
     Public invalid_z0r As String
     Dim downloading_files As String
+    Public shorturl_exists As String
 
     ' Se the language according to the three lang ISO letters
     Public Sub set_language()
@@ -49,6 +50,7 @@ Public Class main
                 settings.runasAdmin.Text = "Avvia z0r all'avvio di Windows"
                 settings.admin_warn.Text = "Avvia z0r come amministratore per modificare la funzione"
                 downloading_files = "Sto scaricando i file necessari..."
+                shorturl_exists = "Il short URL """ & customize.custom_desc.Text & """ esiste già nel database o è riservato"
             Case Else
                 closing_question = "Are you sure to quit z0r?"
                 closing_question = "Quit z0r"
@@ -65,6 +67,7 @@ Public Class main
                 settings.runasAdmin.Text = "Run z0r at Windows startup"
                 settings.admin_warn.Text = "Run z0r as administrator to unlick this option"
                 downloading_files = "Downloading necessary files..."
+                shorturl_exists = "Short URL """ & customize.custom_desc.Text & """ already exists in database or is reserved"
         End Select
 
     End Sub

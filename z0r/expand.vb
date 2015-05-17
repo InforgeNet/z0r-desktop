@@ -86,6 +86,7 @@ Public Class expand
         ' If semaphore is active
         If isactive = True Then
             expanded_url = expand(Clipboard.GetText) ' Get the expanded url
+            My.Computer.Audio.Play(main.sound_file)
             Clipboard.SetText(expanded_url) ' Put the URL in the clipboard
             expanded_link.Text = expanded_url ' show the url in the textbox
             last_url = expanded_url ' Saves the link in last_url

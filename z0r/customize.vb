@@ -68,17 +68,16 @@ Public Class customize
     Private Sub shrink_button_Click(sender As Object, e As EventArgs) Handles shrink_button.Click
         ' If the URL is valid and there is somethink in the textbox
         If isactive = True And custom_desc.TextLength > 0 Then
-            main.NotifyIcon1.ShowBalloonTip(1, "z0r", "Shrinking..", ToolTipIcon.Info)
-            Clipboard.SetText(shrink_custom(Clipboard.GetText, custom_desc.Text))
             Try
-                ' Try to play the file
-                My.Computer.Audio.Play("http://l33tspace.altervista.org/Ding.wav") ' Ding
+                main.NotifyIcon1.ShowBalloonTip(1, "z0r", "Shrinking..", ToolTipIcon.Info)
+                Clipboard.SetText(shrink_custom(Clipboard.GetText, custom_desc.Text.ToLower))
+                My.Computer.Audio.Play(main.sound_file)
+                main.NotifyIcon1.ShowBalloonTip(1, "z0r", main.custom_shrink_success, ToolTipIcon.Info) ' Displays a success notice
+                last_url = Clipboard.GetText() ' Saves the current URL in last_url
+                custom_desc.Text = "" ' Empties the textbox
             Catch ex As Exception
-                ' If not, amen. The important is to avoid crashes and errors for a fucking ding in a crappy server
+                main.NotifyIcon1.ShowBalloonTip(1, "z0r", main.shorturl_exists, ToolTipIcon.Error)
             End Try
-            custom_desc.Text = "" ' Empties the textbox
-            main.NotifyIcon1.ShowBalloonTip(1, "z0r", main.custom_shrink_success, ToolTipIcon.Info) ' Displays a success notice
-            last_url = Clipboard.GetText() ' Saves the current URL in last_url
         End If
     End Sub
 End Class
