@@ -1,4 +1,5 @@
 #TODO
 - [x] shorts only URLs
-- [ ] extend function
+- [x] extend function
 - [ ] customizables shortcuts
+- [ ] add history
