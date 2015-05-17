@@ -73,10 +73,10 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="espandi.Designer.vb">
-      <DependentUpon>espandi.vb</DependentUpon>
+    <Compile Include="expand.Designer.vb">
+      <DependentUpon>expand.vb</DependentUpon>
     </Compile>
-    <Compile Include="espandi.vb">
+    <Compile Include="expand.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="main.vb">
@@ -86,10 +86,10 @@
       <DependentUpon>main.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="impostazioni.Designer.vb">
-      <DependentUpon>impostazioni.vb</DependentUpon>
+    <Compile Include="settings.Designer.vb">
+      <DependentUpon>settings.vb</DependentUpon>
     </Compile>
-    <Compile Include="impostazioni.vb">
+    <Compile Include="settings.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -107,22 +107,22 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="personalizza.Designer.vb">
-      <DependentUpon>personalizza.vb</DependentUpon>
+    <Compile Include="customize.Designer.vb">
+      <DependentUpon>customize.vb</DependentUpon>
     </Compile>
-    <Compile Include="personalizza.vb">
+    <Compile Include="customize.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="espandi.resx">
-      <DependentUpon>espandi.vb</DependentUpon>
+    <EmbeddedResource Include="expand.resx">
+      <DependentUpon>expand.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="main.resx">
       <DependentUpon>main.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="impostazioni.resx">
-      <DependentUpon>impostazioni.vb</DependentUpon>
+    <EmbeddedResource Include="settings.resx">
+      <DependentUpon>settings.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -130,8 +130,8 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="personalizza.resx">
-      <DependentUpon>personalizza.vb</DependentUpon>
+    <EmbeddedResource Include="customize.resx">
+      <DependentUpon>customize.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -144,7 +144,9 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon-32.ico" />

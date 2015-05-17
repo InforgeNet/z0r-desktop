@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class impostazioni
+Partial Class settings
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -22,7 +22,7 @@ Partial Class impostazioni
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(impostazioni))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(settings))
         Me.runasAdmin = New System.Windows.Forms.CheckBox()
         Me.admin_warn = New System.Windows.Forms.Label()
         Me.version = New System.Windows.Forms.Label()
@@ -48,7 +48,7 @@ Partial Class impostazioni
         Me.admin_warn.Name = "admin_warn"
         Me.admin_warn.Size = New System.Drawing.Size(297, 39)
         Me.admin_warn.TabIndex = 1
-        Me.admin_warn.Text = "Avvia z0r come amministratore per abilitare la funzione"
+        Me.admin_warn.Text = "Avvia z0r come amministratore per modificare la funzione"
         Me.admin_warn.Visible = False
         '
         'version
@@ -58,7 +58,7 @@ Partial Class impostazioni
         Me.version.Name = "version"
         Me.version.Size = New System.Drawing.Size(303, 24)
         Me.version.TabIndex = 2
-        Me.version.Text = "versione 0.1"
+        Me.version.Text = "version - 0.1"
         Me.version.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label1
@@ -80,7 +80,7 @@ Partial Class impostazioni
         Me.Label2.TabIndex = 4
         Me.Label2.Text = "Shrink - ALT + Z"
         '
-        'impostazioni
+        'settings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -95,7 +95,7 @@ Partial Class impostazioni
         Me.ForeColor = System.Drawing.SystemColors.ControlText
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Name = "impostazioni"
+        Me.Name = "settings"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "z0r Desktop [β]"
         Me.TopMost = True

@@ -4,64 +4,125 @@ Imports System.Net
 Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Text.RegularExpressions
+Imports System.Globalization
 
 Public Class main
 
-    Dim url_toshrink As String ' URL da shrinkare
-    Dim clipboard_string As String ' Stringa nella clipboard
-    Dim last_shrinked As String
+    Dim url_toshrink As String ' URL ready to shrink
+    Dim clipboard_string As String ' String in clipboard
+    Dim last_shrinked As String ' Last URL shrinked to avoid double shrinks
 
-    Dim main_folder As String = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "/z0r" ' Cartella di z0r in AppData
-    Dim settings_file As String = main_folder & "/z0r_settings.ini" ' File che contiene le impostazioni
+    ' Languages
+    Dim system_lang As String ' Get the three letters ISO language
 
-    ' Effettua la GET al z0r.it ed ottiene il link shrinkato
+    ' Lang var initialization 
+    Dim closing_question As String
+    Dim closing_title As String
+    Dim z0r_active As String
+    Dim shrink_done As String
+    Dim shrink_warning As String
+    Dim shrink_error As String
+    Public invalid_url As String
+    Public valid_url As String
+    Public custom_shrink_success As String
+    Public expand_success As String
+    Public invalid_z0r As String
+
+    ' Se the language according to the three lang ISO letters
+    Public Sub set_language()
+        system_lang = CultureInfo.CurrentCulture.ThreeLetterISOLanguageName
+        Select Case system_lang
+            Case "ita"
+                closing_question = "Sei sicuro di voler chiudere z0r?"
+                closing_title = "Chiudi z0r"
+                z0r_active = "Attivo!"
+                shrink_done = "Link shrinkato e copiato nella clipboard!"
+                shrink_warning = "Hai ancora nella clipboard l'ultimo link shrinkato: "
+                shrink_error = "URL non valido nella clipboard"
+                invalid_url = "Non hai un url valido nella clipboard"
+                valid_url = "Link shrinkato con successo!"
+                custom_shrink_success = "Link custom shrinkato!"
+                expand_success = "Link espanso con successo!"
+                invalid_z0r = "Non hai un url z0r valido nella clipboard"
+                expand.expand_button.Text = "ESPANDI"
+                settings.runasAdmin.Text = "Avvia z0r all'avvio di Windows"
+                settings.admin_warn.Text = "Avvia z0r come amministratore per modificare la funzione"
+            Case Else
+                closing_question = "Are you sure to quit z0r?"
+                closing_question = "Quit z0r"
+                z0r_active = "Working!"
+                shrink_done = "Link shrinked and copied to the clipboard!"
+                shrink_warning = "You still have the last shrinked link in the clipboard: "
+                shrink_error = "Invalid URL in the clipbaord"
+                invalid_url = "You don't have a valid URL in the clipboard"
+                valid_url = "URL shrinked successfully!"
+                custom_shrink_success = "Custom link shrinked!"
+                expand_success = "Link expanded successfully!"
+                invalid_z0r = "Your don't have a valid z0r URL in the clipboard"
+                expand.expand_button.Text = "EXPAND"
+                settings.runasAdmin.Text = "Run z0r at Windows startup"
+                settings.admin_warn.Text = "Run z0r as administrator to unlick this option"
+        End Select
+
+    End Sub
+
+    Dim main_folder As String = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "/z0r" ' Main z0r folder (actually unused)
+    Dim settings_file As String = main_folder & "/z0r_settings.ini" ' Settings file in z0r folder (actually unused)
+
+
+    Dim request As WebRequest, response As WebResponse, dataStream As Stream, responseFromServer As String
+
+    ' Performs the GET request to z0r.it
     Public Function shrink(link As String) As String
-        NotifyIcon1.ShowBalloonTip(1, "z0r", "Shrinking...", ToolTipIcon.Info) ' Notifica di inizio shrink
-        Dim request As WebRequest
-        request = _
+        NotifyIcon1.ShowBalloonTip(1, "z0r", "Shrinking...", ToolTipIcon.Info)
+        Try
+            request = _
        WebRequest.Create("http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&format=simply&url=" & link & "&title=upload_wth_z0r_desktp")
-        request.Credentials = CredentialCache.DefaultCredentials
-        Dim response As WebResponse = request.GetResponse()
-        Console.WriteLine(CType(response, HttpWebResponse).StatusDescription)
-        Dim dataStream As Stream = response.GetResponseStream()
-        Dim reader As New StreamReader(dataStream)
-        Dim responseFromServer As String = reader.ReadToEnd()
-        reader.Close()
-        response.Close()
-        Return responseFromServer
+            request.Credentials = CredentialCache.DefaultCredentials
+            response = request.GetResponse()
+            dataStream = response.GetResponseStream()
+            Dim reader As New StreamReader(dataStream)
+            responseFromServer = reader.ReadToEnd()
+            reader.Close()
+            response.Close()
+            Return responseFromServer
+        Catch ex As Exception
+            NotifyIcon1.ShowBalloonTip(1, "z0r", "Connection error", ToolTipIcon.Error)
+            Exit Function
+        End Try
     End Function
 
-    ' Domanda prima di chiudere il bot
+    ' Question at form closing
     Private Sub ChiudiToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ChiudiToolStripMenuItem.Click
         Dim risp As Integer
-        risp = MessageBox.Show("Sei sicuro di voler chiudere z0r?", "Chiudi z0r", _
+        risp = MessageBox.Show(closing_question, closing_title, _
         MessageBoxButtons.YesNo, MessageBoxIcon.Question)
         If risp = vbYes Then
             Application.Exit()
         End If
     End Sub
 
-    ' Abilita l'icona nel tray e mostra un messaggio di avvenuto avvio
+    ' Enable the tray icon and displays a startup message
     Private Sub zor_Resize(sender As Object, e As EventArgs) Handles Me.Resize
         Try
             If Me.WindowState = FormWindowState.Minimized Then
                 Me.Visible = False
                 NotifyIcon1.Visible = True
-                NotifyIcon1.ShowBalloonTip(1, "z0r", "Attivo", ToolTipIcon.Info)
+                NotifyIcon1.ShowBalloonTip(1, "z0r", z0r_active, ToolTipIcon.Info)
             End If
         Catch ex As Exception
             MsgBox(ex.Message)
         End Try
     End Sub
 
-    ' Minimizza all'avvio
+    ' Minimize at startup
     Private Sub zor_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Me.WindowState = FormWindowState.Minimized
     End Sub
 
-    ' Event che apre il box informazioni se cliccato il relativo bottone
+    ' Click event to show the settings
     Private Sub InformazioniToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles InformazioniToolStripMenuItem.Click
-        impostazioni.Show()
+        settings.Show()
     End Sub
 
     ' ######## Hotkeys
@@ -80,48 +141,49 @@ Public Class main
     ' ##########
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        RegisterHotKey(Me.Handle, 100, MOD_ALT, Keys.Z) ' Hotkey per shrinkare
-        check_files() ' Controllo dei files
+        set_language() ' Checks and sets the language
+        RegisterHotKey(Me.Handle, 100, MOD_ALT, Keys.Z) ' Hotkey for shrink
+        check_files() ' File check
     End Sub
 
-    ' Legge la pressione di eventuali hotkeys
+    ' Read eventual hotkeys
     Protected Overrides Sub WndProc(ByRef m As System.Windows.Forms.Message)
         If m.Msg = WM_HOTKEY Then
-            url_toshrink = isurl(Clipboard.GetText) ' Viene effettuato il controllo sulla stringa nella clipboard
-            ' Se il link è diverso da 0 e quindi va bene
-            If url_toshrink <> "errore" And url_toshrink <> last_shrinked Then
-                Clipboard.SetText(shrink(url_toshrink)) ' shrinka e mette il link nella clipboard
-                last_shrinked = Clipboard.GetText ' Salva il link appena shrinkato per evitare doppi shrink
+            url_toshrink = isurl(Clipboard.GetText) ' Clipbaord strink check
+            ' If there is a valid URL in the clipbaord then
+            If url_toshrink <> "error" And url_toshrink <> last_shrinked Then
+                Clipboard.SetText(shrink(url_toshrink)) ' shrink the URL and put it in the clipboard
+                last_shrinked = Clipboard.GetText ' Save the shrinked URL to avoid double shrinking
                 Try
-                    ' Prova a prelevare il file
+                    ' Try to play the file
                     My.Computer.Audio.Play("http://l33tspace.altervista.org/Ding.wav") ' Ding
                 Catch ex As Exception
-                    ' Nel caso non ci riesce non fa il suono, sticazzi.. non si può far crashare tutto per un ding del cazzo.
+                    ' If not, amen. The important is to avoid crashes and errors for a fucking ding in a crappy server
                 End Try
-                NotifyIcon1.ShowBalloonTip(1, "z0r", "Link shrinkato e copiato nella clipboard!", ToolTipIcon.Info) ' Notifica di successo
-                ' Se il link invece non va bene
+                NotifyIcon1.ShowBalloonTip(1, "z0r", shrink_done, ToolTipIcon.Info) ' Success notification
+                ' If the URL is not valid
             ElseIf url_toshrink = last_shrinked Then
-                ' Se nella clipboard c'è ancora l'ultimo link shrinkato avvisa l'utente
-                NotifyIcon1.ShowBalloonTip(1, "z0r", "Hai ancora nella clipboard l'ultimo link shrinkato: " & vbCrLf & last_shrinked, ToolTipIcon.Warning) ' Notifica di errore
+                ' If in the clipbaord there is the last shrinked URL
+                NotifyIcon1.ShowBalloonTip(1, "z0r", shrink_warning & vbCrLf & last_shrinked, ToolTipIcon.Warning) ' Warning notificatio
             Else
-                NotifyIcon1.ShowBalloonTip(1, "z0r", "URL non valido nella clipboard", ToolTipIcon.Error) ' Notifica di errore
+                NotifyIcon1.ShowBalloonTip(1, "z0r", shrink_error, ToolTipIcon.Error) ' Error notification
             End If
         End If
         MyBase.WndProc(m)
     End Sub
 
-    ' Chiusura di z0r
+    ' z0r closing
     Private Sub Form1_FormClosing(ByVal sender As System.Object, _
                         ByVal e As System.Windows.Forms.FormClosingEventArgs) _
                         Handles MyBase.FormClosing
-        UnregisterHotKey(Me.Handle, 100) ' Shrink
+        UnregisterHotKey(Me.Handle, 100) ' Shrink hotkey
         Application.Exit()
     End Sub
 
     ' Regex
     Dim url_regex As New Regex("(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*\.[-A-Za-z0-9\+&@#/%=~_|():?]+")
 
-    ' Controlla se la stringa è un url
+    ' Check if the strink is a valid URL
     Public Function isurl(link As String) As String
         If url_regex.IsMatch(link) Then
             Return link
@@ -130,22 +192,22 @@ Public Class main
             If url_regex.IsMatch(link) Then
                 Return link
             Else
-                Return "errore"
+                Return "error"
             End If
         End If
     End Function
 
-    ' ########## tasti funzione menu tray icon
+    ' ########## Tray icon menu function keys
 
     Private Sub PersonalizzaLinkToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PersonalizzaLinkToolStripMenuItem.Click
-        personalizza.Show()
+        customize.Show()
     End Sub
 
     Private Sub EstendiLinkToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EstendiLinkToolStripMenuItem.Click
-        espandi.show()
+        expand.Show()
     End Sub
 
-    ' Controlla che siano a posto i file necessari
+    ' Check if the files are OK (unused at the moment)
     Private Sub check_files()
         If Directory.Exists(main_folder) = False Then
             Directory.CreateDirectory(main_folder) ' Crea la directory per z0r
