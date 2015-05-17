@@ -27,6 +27,7 @@ Public Class main
     Public custom_shrink_success As String
     Public expand_success As String
     Public invalid_z0r As String
+    Dim downloading_files As String
 
     ' Se the language according to the three lang ISO letters
     Public Sub set_language()
@@ -47,6 +48,7 @@ Public Class main
                 expand.expand_button.Text = "ESPANDI"
                 settings.runasAdmin.Text = "Avvia z0r all'avvio di Windows"
                 settings.admin_warn.Text = "Avvia z0r come amministratore per modificare la funzione"
+                downloading_files = "Sto scaricando i file necessari..."
             Case Else
                 closing_question = "Are you sure to quit z0r?"
                 closing_question = "Quit z0r"
@@ -62,12 +64,14 @@ Public Class main
                 expand.expand_button.Text = "EXPAND"
                 settings.runasAdmin.Text = "Run z0r at Windows startup"
                 settings.admin_warn.Text = "Run z0r as administrator to unlick this option"
+                downloading_files = "Downloading necessary files..."
         End Select
 
     End Sub
 
     Dim main_folder As String = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "/z0r" ' Main z0r folder (actually unused)
     Dim settings_file As String = main_folder & "/z0r_settings.ini" ' Settings file in z0r folder (actually unused)
+    Public sound_file As String = main_folder & "/z0r_ding.wav"
 
 
     Dim request As WebRequest, response As WebResponse, dataStream As Stream, responseFromServer As String
@@ -154,12 +158,7 @@ Public Class main
             If url_toshrink <> "error" And url_toshrink <> last_shrinked Then
                 Clipboard.SetText(shrink(url_toshrink)) ' shrink the URL and put it in the clipboard
                 last_shrinked = Clipboard.GetText ' Save the shrinked URL to avoid double shrinking
-                Try
-                    ' Try to play the file
-                    My.Computer.Audio.Play("http://l33tspace.altervista.org/Ding.wav") ' Ding
-                Catch ex As Exception
-                    ' If not, amen. The important is to avoid crashes and errors for a fucking ding in a crappy server
-                End Try
+                My.Computer.Audio.Play(sound_file)
                 NotifyIcon1.ShowBalloonTip(1, "z0r", shrink_done, ToolTipIcon.Info) ' Success notification
                 ' If the URL is not valid
             ElseIf url_toshrink = last_shrinked Then
@@ -211,10 +210,17 @@ Public Class main
     Private Sub check_files()
         If Directory.Exists(main_folder) = False Then
             Directory.CreateDirectory(main_folder) ' Crea la directory per z0r
-        ElseIf File.Exists(settings_file) = False Then
+        End If
+        If File.Exists(settings_file) = False Then
             ' C'è la directory ma per qualche motivo non il file settings
             ' Non si fa niente per ora, ma può servire
         End If
+        If File.Exists(sound_file) = False Then
+            NotifyIcon1.ShowBalloonTip(1, "z0r", downloading_files, ToolTipIcon.Info)
+            Dim WebClient As New WebClient()
+            WebClient.DownloadFile("http://l33tspace.altervista.org/Ding.wav", sound_file)
+        End If
+
     End Sub
 
     ' Remove www in the URL
