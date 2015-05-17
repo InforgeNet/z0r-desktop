@@ -85,7 +85,7 @@ Public Class main
             responseFromServer = reader.ReadToEnd()
             reader.Close()
             response.Close()
-            Return responseFromServer
+            Return remove_www(responseFromServer)
         Catch ex As Exception
             NotifyIcon1.ShowBalloonTip(1, "z0r", "Connection error", ToolTipIcon.Error)
             Exit Function
@@ -216,5 +216,14 @@ Public Class main
             ' Non si fa niente per ora, ma può servire
         End If
     End Sub
+
+    ' Remove www in the URL
+    Public Function remove_www(url As String) As String
+        If url.Split(".").GetValue(0) = "http://www" Then
+            Return "http://z0r." & url.Split(".").GetValue(2)
+        Else
+            Return url
+        End If
+    End Function
 
 End Class
