@@ -1,0 +1,10 @@
+C:\Users\Federico\AppData\Local\Temporary Projects\z0r-desktop\bin\Debug\z0r-desktop.exe.config
+C:\Users\Federico\SkyDrive\Progetti\z0r-desktop\z0r-desktop\bin\Debug\z0r-desktop.exe.config
+C:\Users\Federico\SkyDrive\Progetti\z0r-desktop\z0r-desktop\bin\Debug\z0r-desktop.exe
+C:\Users\Federico\SkyDrive\Progetti\z0r-desktop\z0r-desktop\bin\Debug\z0r-desktop.pdb
+C:\Users\Federico\SkyDrive\Progetti\z0r-desktop\z0r-desktop\obj\Debug\z0r-desktop.csprojResolveAssemblyReference.cache
+C:\Users\Federico\SkyDrive\Progetti\z0r-desktop\z0r-desktop\obj\Debug\z0r_desktop.main.resources
+C:\Users\Federico\SkyDrive\Progetti\z0r-desktop\z0r-desktop\obj\Debug\z0r_desktop.Properties.Resources.resources
+C:\Users\Federico\SkyDrive\Progetti\z0r-desktop\z0r-desktop\obj\Debug\z0r-desktop.csproj.GenerateResource.Cache
+C:\Users\Federico\SkyDrive\Progetti\z0r-desktop\z0r-desktop\obj\Debug\z0r-desktop.exe
+C:\Users\Federico\SkyDrive\Progetti\z0r-desktop\z0r-desktop\obj\Debug\z0r-desktop.pdb
