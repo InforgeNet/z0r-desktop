@@ -72,6 +72,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "customizeLink";
             this.Text = "Custom link";
+            this.Load += new System.EventHandler(this.customizeLink_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

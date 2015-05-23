@@ -16,5 +16,10 @@ namespace z0r_desktop
         {
             InitializeComponent();
         }
+
+        private void customizeLink_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

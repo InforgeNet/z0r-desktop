@@ -12,13 +12,19 @@ using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Security.Principal;
+using Microsoft.Win32;
 
 namespace z0r_desktop {
+
+    // Main 
     public partial class main : Form {
         
         // Classes import
         hotkeys hk = new hotkeys();
-        settings sett = new settings();
+
+        // Registry key
+        RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
         // Ding
         System.Media.SoundPlayer player = new System.Media.SoundPlayer();
@@ -27,12 +33,26 @@ namespace z0r_desktop {
         Regex urlRegex = new Regex("(https?|ftp|file)://[-A-Za-z0-9\\+&@#/%?=~_|!:,.;]*\\.[A-Za-z0-9\\+&@%#/=~_|():?]+");
         Regex z0rRegex = new Regex("http://z0r.it/[^ \n]");
 
+        // Settings
+        public bool soundIsActive;
+        public bool autoShrinkIsActive;
+
+        // Directories
+        string z0rFolder = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/z0r";
+        public string soundFile = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/z0r/z0rDing.wav";
+        public string settingsFile = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/z0r/settings.ini"; 
+
+        // Last shrinked URL, to avoid multiple shrink
+        string lastLink;
+
         // Main form
         public main() {
-            sett.checkFiles(); // Check if all files are ok, otherwhise create/download them
+            checkFiles(); // Check if all files are ok, otherwhise create/download them
             hk.GlobalHotkey(Constants.ALT, Keys.Z, this); // Register ALT+Z hotkey
             hk.Register();
             InitializeComponent();
+            loadSettings();
+            AddClipboardFormatListener(this.Handle); // Clipboard handler
         }
 
         // When the main form is showed is minimized
@@ -65,17 +85,32 @@ namespace z0r_desktop {
             catch (Exception ex) { MessageBox.Show(ex.Message);}
          }
 
-        // Hotkey Handler
+        // sys message Handler
         protected override void WndProc(ref Message m) {
-            if (m.Msg == Constants.WM_HOTKEY_MSG_ID) shrink(Clipboard.GetText());
-            base.WndProc(ref m);   
+            // Hotkey press event
+            if (m.Msg == Constants.WM_HOTKEY_MSG_ID) shrink(Clipboard.GetText()); 
+
+            base.WndProc(ref m);
+
+            // Clipboard change event
+            if (m.Msg == WM_CLIPBOARDUPDATE) {
+                    // Only if the last link is different from actual link, or loops
+                    if (Clipboard.GetText() != lastLink) autoShrink();       
+            }
         }
 
         // Shrink the clipboard content
         private void shrink(string longLink) {
             string urlToShrink = checkClipboard(longLink);
-            if (z0rRegex.IsMatch(removeWWW(urlToShrink))) Clipboard.SetText(getLongLink(urlToShrink));
-            else if(!(urlToShrink == "error")) Clipboard.SetText(getShortLink(urlToShrink));
+            if (z0rRegex.IsMatch(removeWWW(urlToShrink))) {
+                lastLink = getLongLink(urlToShrink);
+                Clipboard.SetText(lastLink);
+            }
+            else if (!(urlToShrink == "error"))
+            {
+                lastLink = getShortLink(urlToShrink);
+                Clipboard.SetText(lastLink);
+            }
             else notification.ShowBalloonTip(1, "z0r", "Invalid URL", ToolTipIcon.Error);
         }
 
@@ -97,8 +132,7 @@ namespace z0r_desktop {
                 System.Net.WebRequest req = System.Net.WebRequest.Create(URI);
                 System.Net.WebResponse resp = req.GetResponse();
                 System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
-                System.Media.SoundPlayer player = new System.Media.SoundPlayer(sett.soundFile);
-                player.Play();
+                playSound(); 
                 notification.ShowBalloonTip(1, "z0r", "URL shrinked and pasted in clipboard!", ToolTipIcon.Info);
                 return removeWWW(sr.ReadToEnd().Trim());
             } catch {
@@ -115,8 +149,7 @@ namespace z0r_desktop {
                 System.Net.WebRequest req = System.Net.WebRequest.Create(URI);
                 System.Net.WebResponse resp = req.GetResponse();
                 System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
-                System.Media.SoundPlayer player = new System.Media.SoundPlayer(sett.soundFile);
-                player.Play();
+                playSound();
                 notification.ShowBalloonTip(1, "z0r", "URL expanded and pasted in clipboard!", ToolTipIcon.Info);
                 return sr.ReadToEnd().Trim();
             }
@@ -137,26 +170,159 @@ namespace z0r_desktop {
             char[] splitchar = { '.' };
             return "http://z0r." + link.Split(splitchar).Last();
         }
-    }
 
-    // Files and settings
-    public class settings {
+        // Automatic shrinking, if active
+        public void autoShrink()
+        {
+            if(autoShrinkEnabled.Checked) shrink(Clipboard.GetText());
+        }
 
-        // Directories
-        string z0rFolder = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/z0r";
-        public string soundFile = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/z0r/z0rDing.wav";
+        // Function to play sound
+        public void playSound() {
+            if (soundEnabled.Checked) {
+                System.Media.SoundPlayer player = new System.Media.SoundPlayer(soundFile);
+                player.Play();
+            }   
+        }
 
+        // Clipboard change event /////////////////////////////////////////////////////////////////////////
+
+        // Places the given window in the system-maintained clipboard format listener list.
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AddClipboardFormatListener(IntPtr hwnd);
+
+        // Removes the given window from the system-maintained clipboard format listener list.
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool RemoveClipboardFormatListener(IntPtr hwnd);
+
+        // Sent when the contents of the clipboard have changed.
+        private const int WM_CLIPBOARDUPDATE = 0x031D;
+
+        // Custom link button click
+        private void customLink_Click(object sender, EventArgs e)
+        {
+            customizeLink customizeWindow = new customizeLink();
+            customizeWindow.Show();
+        }
+
+        // Shows help dialog
+        private void showTips_Click(object sender, EventArgs e){
+            string helpText = "SHRINK\nCopy the link you want to shrink in the clipboard and press ATL+Z\n\nEXPAND\nSame thing as Shrink, but if you have a z0r link in clipboard it will be extended.\n\nInforge.net";
+            MessageBox.Show(helpText, "Z0r Info", MessageBoxButtons.OK);
+        }
+
+        // Settings methods /////////////////////////////////////////////////////////////////////////////////
         // Check if all files are OK, otherwise download them
-        public void checkFiles() {
+        public void checkFiles()
+        {
 
             if (!Directory.Exists(z0rFolder)) Directory.CreateDirectory(z0rFolder); // Check z0r folder
 
             // Check audio file
-            if (!File.Exists(soundFile)) {
+            if (!File.Exists(soundFile)){
                 WebClient wc = new WebClient();
                 wc.DownloadFile("http://l33tspace.altervista.org/Ding.wav", soundFile);
             }
         }
+
+        // Load and update settings
+        public void loadSettings()
+        {
+            if (!File.Exists(settingsFile))
+            {
+                // Default setting file
+                File.Create(settingsFile).Dispose();
+                StreamWriter writeText = new StreamWriter(settingsFile);
+                writeText.WriteLine("True");
+                writeText.WriteLine("False");
+                writeText.WriteLine("False");
+                writeText.Close();
+            }
+
+            StreamReader readText = new StreamReader(settingsFile);
+            soundEnabled.Checked = Convert.ToBoolean(readText.ReadLine());
+            autoShrinkEnabled.Checked = Convert.ToBoolean(readText.ReadLine());
+            autoRunEnabled.Checked = Convert.ToBoolean(readText.ReadLine());
+            readText.Close();
+        }
+
+        // Save settings avery time settings are changed
+        public void saveSettings() {
+            if (!File.Exists(settingsFile)) {
+                File.Create(settingsFile).Dispose();
+            } else {
+                File.Delete(settingsFile);
+                File.Create(settingsFile).Dispose();
+            }
+
+            StreamWriter writeText = new StreamWriter(settingsFile);
+            writeText.WriteLine(soundEnabled.Checked.ToString());
+            writeText.WriteLine(autoShrinkEnabled.Checked.ToString());
+            writeText.WriteLine(autoRunEnabled.Checked.ToString());
+            writeText.Close();
+
+
+        }
+
+        // Check if user is admin
+        public bool isAdmin() {
+            //bool value to hold our return value
+            bool response;
+            try
+            {
+                //get the currently logged in user
+                WindowsIdentity user = WindowsIdentity.GetCurrent();
+                WindowsPrincipal principal = new WindowsPrincipal(user);
+                response = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                response = false;
+            }
+            catch (Exception ex)
+            {
+                response = false;
+            }
+            return response;
+        }
+
+        // MENU ITEMS ///////////////////////////////////////////////////////////////////////////////////////
+        // Toggle sound
+        private void toggleSound(object sender, EventArgs e)
+        {
+            if (soundEnabled.Checked) soundEnabled.Checked = false;
+            else soundEnabled.Checked = true;
+            saveSettings();
+        }
+
+        // Toggle auto shrink/expand
+        private void toggleAutoShrink(object sender, EventArgs e)
+        {
+            if (autoShrinkEnabled.Checked) autoShrinkEnabled.Checked = false;
+            else autoShrinkEnabled.Checked = true;
+            saveSettings();
+        }
+
+        // Toggle autorun at Windows Startup
+        private void toggleAutorun(object sender, EventArgs e) {
+            if (isAdmin()){
+                if (autoRunEnabled.Checked){
+                    autoRunEnabled.Checked = false;
+                    rkApp.DeleteValue("z0r", false);
+                } else {
+                    autoRunEnabled.Checked = true;
+                    rkApp.SetValue("z0r", Application.ExecutablePath.ToString());
+                }
+                saveSettings();
+            }
+            else
+            {
+                MessageBox.Show("To change this option you must run z0r as Administrator", "Admin privileges requested");
+            }
+        }
+
     }
 
     // HotKeys methods
