@@ -64,7 +64,9 @@
             this.showTips,
             this.closeZ0r});
             this.options.Name = "options";
-            this.options.Size = new System.Drawing.Size(201, 170);
+            this.options.Size = new System.Drawing.Size(201, 192);
+            this.options.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.menuClosing);
+            this.options.Opened += new System.EventHandler(this.menuOpened);
             // 
             // customLink
             // 

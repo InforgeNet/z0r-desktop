@@ -95,7 +95,7 @@ namespace z0r_desktop {
             // Clipboard change event
             if (m.Msg == WM_CLIPBOARDUPDATE) {
                     // Only if the last link is different from actual link, or loops
-                    if (Clipboard.GetText() != lastLink) autoShrink();       
+                if (Clipboard.GetText() != lastLink) autoShrink(Clipboard.GetText());       
             }
         }
 
@@ -103,8 +103,8 @@ namespace z0r_desktop {
         private void shrink(string longLink) {
             string urlToShrink = checkClipboard(longLink);
             if (z0rRegex.IsMatch(removeWWW(urlToShrink))) {
-                lastLink = getLongLink(urlToShrink);
-                Clipboard.SetText(lastLink);
+                    lastLink = getLongLink(urlToShrink);
+                    Clipboard.SetText(lastLink);  
             }
             else if (!(urlToShrink == "error"))
             {
@@ -135,6 +135,22 @@ namespace z0r_desktop {
                 playSound(); 
                 notification.ShowBalloonTip(1, "z0r", "URL shrinked and pasted in clipboard!", ToolTipIcon.Info);
                 return removeWWW(sr.ReadToEnd().Trim());
+            } catch {
+                notification.ShowBalloonTip(1, "z0r", "Connection error", ToolTipIcon.Error);
+                return longLink;
+            }
+        }
+
+        // Get custom short link from z0r
+        public string getCustomShortLink(string longLink, string customLink) {
+            try {
+                string URI = "http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&title=uploaded_with_z0r_desktop&keyword=" + customLink + "&format=simply&url=" + longLink;
+                System.Net.WebRequest req = System.Net.WebRequest.Create(URI);
+                System.Net.WebResponse resp = req.GetResponse();
+                System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
+                playSound();
+                notification.ShowBalloonTip(1, "z0r", "Custom URL shrinked and pasted in clipboard!", ToolTipIcon.Info);
+                return sr.ReadToEnd().Trim();
             } catch {
                 notification.ShowBalloonTip(1, "z0r", "Connection error", ToolTipIcon.Error);
                 return longLink;
@@ -172,9 +188,17 @@ namespace z0r_desktop {
         }
 
         // Automatic shrinking, if active
-        public void autoShrink()
-        {
-            if(autoShrinkEnabled.Checked) shrink(Clipboard.GetText());
+        public void autoShrink(string longLink){
+            if (autoShrinkEnabled.Checked) {
+                string urlToShrink = checkClipboard(longLink);
+                if (z0rRegex.IsMatch(removeWWW(urlToShrink))){
+                    // nothing
+                } else if (!(urlToShrink == "error")) {
+                    lastLink = getShortLink(urlToShrink);
+                    Clipboard.SetText(lastLink);
+                }
+                else notification.ShowBalloonTip(1, "z0r", "Invalid URL", ToolTipIcon.Error);
+            }
         }
 
         // Function to play sound
@@ -201,15 +225,15 @@ namespace z0r_desktop {
         private const int WM_CLIPBOARDUPDATE = 0x031D;
 
         // Custom link button click
-        private void customLink_Click(object sender, EventArgs e)
-        {
-            customizeLink customizeWindow = new customizeLink();
-            customizeWindow.Show();
+        private void customLink_Click(object sender, EventArgs e){
+            string customInput = Microsoft.VisualBasic.Interaction.InputBox("Insert the text of your custom link. The link created will be like: http://z0r.it/your-text", "Custom link", "");
+            string customText = customInput.Replace(" ", "-");
+            Clipboard.SetText(getCustomShortLink(Clipboard.GetText(), customText));
         }
 
         // Shows help dialog
         private void showTips_Click(object sender, EventArgs e){
-            string helpText = "SHRINK\nCopy the link you want to shrink in the clipboard and press ATL+Z\n\nEXPAND\nSame thing as Shrink, but if you have a z0r link in clipboard it will be extended.\n\nInforge.net";
+            string helpText = "SHRINK\nCopy the link you want to shrink in the clipboard and press ATL+Z\n\nEXPAND\nSame thing as Shrink, but if you have a z0r link in clipboard it will be extended.\n\nAUTOSHRINK\nIf enabled, everytime you copy a link in clipbord it will automatcally shrinked\n\nInforge.net";
             MessageBox.Show(helpText, "Z0r Info", MessageBoxButtons.OK);
         }
 
@@ -310,10 +334,10 @@ namespace z0r_desktop {
             if (isAdmin()){
                 if (autoRunEnabled.Checked){
                     autoRunEnabled.Checked = false;
-                    rkApp.DeleteValue("z0r", false);
+                    if (rkApp.GetValue("z0r") != null)  rkApp.DeleteValue("z0r", false);
                 } else {
                     autoRunEnabled.Checked = true;
-                    rkApp.SetValue("z0r", Application.ExecutablePath.ToString());
+                    if (rkApp.GetValue("z0r") == null)  rkApp.SetValue("z0r", Application.ExecutablePath.ToString());
                 }
                 saveSettings();
             }
@@ -323,6 +347,22 @@ namespace z0r_desktop {
             }
         }
 
+        // Avoid the menu closing after clicking an item
+        private void menuClosing(object sender, ToolStripDropDownClosingEventArgs e)
+        {
+            if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
+                e.Cancel = true;
+        }
+
+        // Detect if the program is in the startup and refresh the control
+        private void menuOpened(object sender, EventArgs e)
+        {
+            if (rkApp.GetValue("z0r") != null) {
+                autoRunEnabled.Checked = true;
+            } else {
+                autoRunEnabled.Checked = false;
+            }
+        }
     }
 
     // HotKeys methods
@@ -375,5 +415,6 @@ namespace z0r_desktop {
         //windows message id for hotkey
         public const int WM_HOTKEY_MSG_ID = 0x0312;
     }
+
 }
 
