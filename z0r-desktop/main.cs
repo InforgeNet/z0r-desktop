@@ -40,7 +40,8 @@ namespace z0r_desktop {
         // Directories
         string z0rFolder = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/z0r";
         public string soundFile = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/z0r/z0rDing.wav";
-        public string settingsFile = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/z0r/settings.ini"; 
+        public string settingsFile = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/z0r/settings.ini";
+        public string historyFile = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/z0r/history.txt"; 
 
         // Last shrinked URL, to avoid multiple shrink
         string lastLink;
@@ -104,12 +105,13 @@ namespace z0r_desktop {
             string urlToShrink = checkClipboard(longLink);
             if (z0rRegex.IsMatch(removeWWW(urlToShrink))) {
                     lastLink = getLongLink(urlToShrink);
-                    Clipboard.SetText(lastLink);  
+                    Clipboard.SetText(lastLink);
             }
             else if (!(urlToShrink == "error"))
             {
                 lastLink = getShortLink(urlToShrink);
                 Clipboard.SetText(lastLink);
+                registerHistory(longLink, lastLink, DateTime.Now.ToString());
             }
             else notification.ShowBalloonTip(1, "z0r", "Invalid URL", ToolTipIcon.Error);
         }
@@ -209,8 +211,6 @@ namespace z0r_desktop {
             }   
         }
 
-        // Clipboard change event /////////////////////////////////////////////////////////////////////////
-
         // Places the given window in the system-maintained clipboard format listener list.
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -228,7 +228,10 @@ namespace z0r_desktop {
         private void customLink_Click(object sender, EventArgs e){
             string customInput = Microsoft.VisualBasic.Interaction.InputBox("Insert the text of your custom link. The link created will be like: http://z0r.it/your-text", "Custom link", "");
             string customText = customInput.Replace(" ", "-");
-            Clipboard.SetText(getCustomShortLink(Clipboard.GetText(), customText));
+            string longLink = Clipboard.GetText();
+            lastLink = getCustomShortLink(longLink, customText);
+            Clipboard.SetText(lastLink);
+            registerHistory(longLink, lastLink, DateTime.Now.ToString());
         }
 
         // Shows help dialog
@@ -237,12 +240,11 @@ namespace z0r_desktop {
             MessageBox.Show(helpText, "Z0r Info", MessageBoxButtons.OK);
         }
 
-        // Settings methods /////////////////////////////////////////////////////////////////////////////////
         // Check if all files are OK, otherwise download them
         public void checkFiles()
         {
-
-            if (!Directory.Exists(z0rFolder)) Directory.CreateDirectory(z0rFolder); // Check z0r folder
+            // Check z0r folder
+            if (!Directory.Exists(z0rFolder)) Directory.CreateDirectory(z0rFolder);
 
             // Check audio file
             if (!File.Exists(soundFile)){
@@ -312,7 +314,6 @@ namespace z0r_desktop {
             return response;
         }
 
-        // MENU ITEMS ///////////////////////////////////////////////////////////////////////////////////////
         // Toggle sound
         private void toggleSound(object sender, EventArgs e)
         {
@@ -362,6 +363,23 @@ namespace z0r_desktop {
             } else {
                 autoRunEnabled.Checked = false;
             }
+        }
+
+        // Write history
+        public void registerHistory(string longLink, string shortLink, string time) {
+            // Check file before write
+            if (!File.Exists(historyFile)) File.Create(historyFile).Dispose();
+
+            StreamWriter writeText = new StreamWriter(historyFile, true);
+            writeText.WriteLine(time + " - " + shortLink + " (" + longLink + ")");
+            writeText.Close();
+        }
+
+        // Open history file
+        private void linkHistory_Click(object sender, EventArgs e)
+        {
+            history historyWindow = new history();
+            historyWindow.Show();
         }
     }
 

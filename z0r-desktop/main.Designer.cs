@@ -82,6 +82,7 @@
             this.linkHistory.Name = "linkHistory";
             this.linkHistory.Size = new System.Drawing.Size(200, 22);
             this.linkHistory.Text = "History";
+            this.linkHistory.Click += new System.EventHandler(this.linkHistory_Click);
             // 
             // toolStripSeparator1
             // 

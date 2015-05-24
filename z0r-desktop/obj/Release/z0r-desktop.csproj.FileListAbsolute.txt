@@ -1,0 +1,9 @@
+C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\bin\Release\z0r-desktop.exe.config
+C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\bin\Release\z0r-desktop.exe
+C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\bin\Release\z0r-desktop.pdb
+C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r_desktop.history.resources
+C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r_desktop.main.resources
+C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r_desktop.Properties.Resources.resources
+C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r-desktop.csproj.GenerateResource.Cache
+C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r-desktop.exe
+C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r-desktop.pdb
