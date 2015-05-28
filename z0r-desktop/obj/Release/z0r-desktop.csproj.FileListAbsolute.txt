@@ -7,3 +7,7 @@ C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r_deskto
 C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r-desktop.csproj.GenerateResource.Cache
 C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r-desktop.exe
 C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r-desktop.pdb
+C:\Users\Federico\OneDrive\Github\z0r-desktop\z0r-desktop\bin\Release\z0r-desktop.exe.config
+C:\Users\Federico\OneDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r-desktop.exe
+C:\Users\Federico\OneDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r-desktop.pdb
+C:\Users\Federico\SkyDrive\Github\z0r-desktop\z0r-desktop\obj\Release\z0r-desktop.csprojResolveAssemblyReference.cache

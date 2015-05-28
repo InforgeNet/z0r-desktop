@@ -13,6 +13,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Security.Principal;
+using System.Web;
 using Microsoft.Win32;
 
 namespace z0r_desktop {
@@ -32,10 +33,6 @@ namespace z0r_desktop {
         // Reg Expressions
         Regex urlRegex = new Regex("(https?|ftp|file)://[-A-Za-z0-9\\+&@#/%?=~_|!:,.;]*\\.[A-Za-z0-9\\+&@%#/=~_|():?]+");
         Regex z0rRegex = new Regex("http://z0r.it/[^ \n]");
-
-        // Settings
-        public bool soundIsActive;
-        public bool autoShrinkIsActive;
 
         // Directories
         string z0rFolder = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/z0r";
@@ -129,15 +126,18 @@ namespace z0r_desktop {
         // Get short link from z0r
         public string getShortLink(string longLink) {
             notification.ShowBalloonTip(1, "z0r", "Shrinkig...", ToolTipIcon.Info);
-            try {
-                string URI = "http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&format=simply&url=" + longLink + "&title=upload_wth_z0r_desktop";
+            try
+            {
+                string URI = "http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&format=simply&url=" + HttpUtility.UrlEncode(longLink) + "&title=upload_wth_z0r_desktop";
                 System.Net.WebRequest req = System.Net.WebRequest.Create(URI);
                 System.Net.WebResponse resp = req.GetResponse();
                 System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
-                playSound(); 
+                playSound();
                 notification.ShowBalloonTip(1, "z0r", "URL shrinked and pasted in clipboard!", ToolTipIcon.Info);
                 return removeWWW(sr.ReadToEnd().Trim());
-            } catch {
+            }
+            catch
+            {
                 notification.ShowBalloonTip(1, "z0r", "Connection error", ToolTipIcon.Error);
                 return longLink;
             }
