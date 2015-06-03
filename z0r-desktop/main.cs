@@ -146,7 +146,7 @@ namespace z0r_desktop {
         // Get custom short link from z0r
         public string getCustomShortLink(string longLink, string customLink) {
             try {
-                string URI = "http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&title=uploaded_with_z0r_desktop&keyword=" + customLink + "&format=simply&url=" + longLink;
+                string URI = "http://z0r.it/yourls-api.php?signature=4e4b657a91&action=shorturl&title=uploaded_with_z0r_desktop&keyword=" + removeDiacritics(customLink.ToLower()) + "&format=simply&url=" + longLink;
                 System.Net.WebRequest req = System.Net.WebRequest.Create(URI);
                 System.Net.WebResponse resp = req.GetResponse();
                 System.IO.StreamReader sr = new System.IO.StreamReader(resp.GetResponseStream());
@@ -157,6 +157,22 @@ namespace z0r_desktop {
                 notification.ShowBalloonTip(1, "z0r", "Connection error", ToolTipIcon.Error);
                 return longLink;
             }
+        }
+
+        // Removes diacritics (accents) from custom link
+        static string removeDiacritics(string text){
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString){
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
         // Get long link from z0r
