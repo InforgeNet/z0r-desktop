@@ -1,5 +1,8 @@
 #TODO
 - [x] shorts only URLs
 - [x] extend function
-- [ ] customizables shortcuts
-- [ ] add history
+- [x] customizables shortcuts
+- [x] add history
+- [ ] remove extend function
+- [ ] add whitelist
+- [ ] remove control over arument (now serverside)
